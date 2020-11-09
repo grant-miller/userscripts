@@ -11,7 +11,7 @@
 (async function () {
   'use strict';
   
-  const search = new URL(location).searchParams;
+  const search = new URLSearchParams(location.search);
   const versions = 'AKJV;BRG;NASB;NIV;ESV';
   
   if (search.get('version') !== versions) {
