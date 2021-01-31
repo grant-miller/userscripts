@@ -22,6 +22,10 @@
     search.set('version', versions);
     location.search = decodeURIComponent(search.toString());
   } else {
+    while (!document.querySelector('.passage-col') && !document.querySelector('.chapternum, .versenum') && !document.querySelector('.prev-chapter') && !document.querySelector('.next-chapter')) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+    
     const $passage_columns = document.querySelectorAll('.passage-col');
     const $verse_numbers = document.querySelectorAll('.chapternum, .versenum');
     
