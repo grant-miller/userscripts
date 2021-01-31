@@ -92,9 +92,15 @@
     
     for (let i = 0; i < $passage_columns.length; i++) {
       const $passage_column = $passage_columns[i];
-      const $verse_numbers = $passage_column.querySelectorAll('.chapternum, .versenum')
+      const $passage_display_text = $passage_column.querySelector('.bcv .dropdown-display-text');
+      const $verse_numbers = $passage_column.querySelectorAll('.chapternum, .versenum');
       
-      let expected_verse_number = 1;
+      const passage_display_text = $passage_display_text?.textContent.trim();
+      const passage_begin_and_end_values = (passage_display_text?.match(/:\d+(-\d+)?$/g)?.pop() ?? '').match(/\d+/g) ?? [];
+      const passage_begin_value = +passage_begin_and_end_values[0] || 1;
+      const passage_end_value = +passage_begin_and_end_values[1] || null;
+      
+      let expected_verse_number = passage_begin_value;
       
       for (let j = 0; j < $verse_numbers.length; j++) {
         const $verse_number = $verse_numbers[j];
@@ -107,16 +113,10 @@
           
           $verse_number.innerHTML = `<a href="https://www.startpage.com/do/search?q=${verse_search_query}" target="_blank">${verse_number_text}</a>&nbsp;`;
           
-          if ($verse_number.matches('.chapternum')) {
-            expected_verse_number++;
-            continue;
-          }
-          
-          if (verse_number === expected_verse_number) {
+          if ($verse_number.matches('.chapternum') || verse_number === expected_verse_number) {
             expected_verse_number++;
           } else {
             expected_verse_number = verse_number + 1;
-            
             $verse_number.insertAdjacentHTML('beforebegin', '<span class="verse-omitted">Verse Omitted</span>');
           }
         }
